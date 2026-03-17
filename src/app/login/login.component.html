@@ -1,0 +1,39 @@
+<div class="login-wrapper">
+  <p-card header="Login" styleClass="login-card">
+    <form (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          pInputText
+          [(ngModel)]="username"
+          name="username"
+          autocomplete="username"
+          class="w-full"
+        />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          inputStyleClass="w-full"
+          styleClass="w-full"
+        />
+      </div>
+      @if (error) {
+        <p-message severity="error" [text]="error" styleClass="w-full mb-2" />
+      }
+      <p-button
+        type="submit"
+        label="Sign in"
+        icon="pi pi-sign-in"
+        styleClass="w-full"
+      />
+    </form>
+  </p-card>
+</div>
