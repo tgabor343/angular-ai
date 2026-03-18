@@ -1,6 +1,10 @@
 /* PrimeIcons - required for PrimeNG icon classes (e.g. pi pi-sign-in) */
 @import "primeicons/primeicons.css";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Base layout so router outlet and pages fill the viewport */
 :root {
   font-family: var(--p-font-family, system-ui, -apple-system, sans-serif);

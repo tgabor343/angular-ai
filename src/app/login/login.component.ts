@@ -22,8 +22,7 @@ import { AuthService } from '../auth/auth.service';
     ButtonModule,
     MessageModule
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
   username = '';

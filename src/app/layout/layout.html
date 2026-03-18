@@ -1,0 +1,19 @@
+<div class="layout-page">
+  <p-toolbar>
+    <ng-template pTemplate="start">
+      <h1 class="m-0 text-xl font-semibold">App</h1>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <span class="mr-2">{{ username }}</span>
+      <p-button
+        label="Logout"
+        icon="pi pi-sign-out"
+        severity="secondary"
+        (onClick)="logout()"
+      />
+    </ng-template>
+  </p-toolbar>
+  <main class="p-4">
+    <router-outlet />
+  </main>
+</div>
