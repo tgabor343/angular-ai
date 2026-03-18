@@ -4,12 +4,12 @@
       <h1 class="m-0 text-xl font-semibold">App</h1>
     </ng-template>
     <ng-template pTemplate="end">
-      <span class="mr-2">{{ username }}</span>
+      <span class="mr-2">{{ username() }}</span>
       <p-button
         label="Logout"
         icon="pi pi-sign-out"
         severity="secondary"
-        (onClick)="logout()"
+        (click)="logout()"
       />
     </ng-template>
   </p-toolbar>
