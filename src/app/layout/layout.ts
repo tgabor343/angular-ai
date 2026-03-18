@@ -4,11 +4,12 @@ import { Toolbar } from 'primeng/toolbar';
 import { Button } from 'primeng/button';
 import { AuthService } from '../auth/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import {PrimeTemplate} from 'primeng/api';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, Toolbar, Button],
+  imports: [RouterOutlet, Toolbar, Button, PrimeTemplate],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
