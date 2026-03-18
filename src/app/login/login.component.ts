@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -15,40 +15,42 @@ import { AuthService } from '../auth/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [
-    FormsModule,
+    ReactiveFormsModule,
     CardModule,
     InputTextModule,
     PasswordModule,
     ButtonModule,
     MessageModule
   ],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  username = '';
-  password = '';
-  error = '';
+  private readonly fb = inject(FormBuilder);
+  private readonly authenticationService = inject(AuthenticationService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
-  constructor(
-    private readonly authenticationService: AuthenticationService,
-    private readonly auth: AuthService,
-    private readonly router: Router
-  ) {}
+  protected readonly loginForm = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required]
+  });
+  protected readonly error = signal('');
+  protected readonly isLoading = signal(false);
 
   onSubmit(): void {
-    this.error = '';
-    if (!this.username.trim() || !this.password.trim()) {
-      this.error = 'Please enter username and password.';
+    this.error.set('');
+    if (this.loginForm.invalid) {
+      this.error.set('Please enter username and password.');
       return;
     }
-    const loginRequest: LoginRequest = {
-      username: this.username,
-      password: this.password
-    };
+    this.isLoading.set(true);
+    const { username, password } = this.loginForm.value;
+    const loginRequest: LoginRequest = { username: username ?? '', password: password ?? '' };
     this.authenticationService.login(loginRequest).subscribe({
       next: (response: LoginResponse) => {
+        this.isLoading.set(false);
         if (response.success) {
-          // Assuming the token is in the response as 'token'
           const token = response.token;
           if (token) {
             localStorage.setItem('auth-token', token);
@@ -56,11 +58,12 @@ export class LoginComponent {
           }
           this.router.navigate(['/list']);
         } else {
-          this.error = response.message || 'Login failed';
+          this.error.set(response.message || 'Login failed');
         }
       },
       error: (err) => {
-        this.error = 'Login failed';
+        this.isLoading.set(false);
+        this.error.set('Login failed');
       }
     });
   }
