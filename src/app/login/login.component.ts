@@ -6,6 +6,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { AuthenticationService } from '../api/api/authentication.service';
+import { LoginRequest } from '../api/model/loginRequest';
+import { LoginResponse } from '../api/model/loginResponse';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -28,6 +31,7 @@ export class LoginComponent {
   error = '';
 
   constructor(
+    private readonly authenticationService: AuthenticationService,
     private readonly auth: AuthService,
     private readonly router: Router
   ) {}
@@ -38,7 +42,27 @@ export class LoginComponent {
       this.error = 'Please enter username and password.';
       return;
     }
-    this.auth.login();
-    this.router.navigate(['/list']);
+    const loginRequest: LoginRequest = {
+      username: this.username,
+      password: this.password
+    };
+    this.authenticationService.login(loginRequest).subscribe({
+      next: (response: LoginResponse) => {
+        if (response.success) {
+          // Assuming the token is in the response as 'token'
+          const token = response.token;
+          if (token) {
+            localStorage.setItem('auth-token', token);
+            this.auth.login();
+          }
+          this.router.navigate(['/list']);
+        } else {
+          this.error = response.message || 'Login failed';
+        }
+      },
+      error: (err) => {
+        this.error = 'Login failed';
+      }
+    });
   }
 }

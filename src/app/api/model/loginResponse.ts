@@ -25,5 +25,9 @@ export interface LoginResponse {
      * Username of the logged-in user
      */
     username?: string;
+    /**
+     * JWT token for authentication
+     */
+    token?: string;
 }
 
